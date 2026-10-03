@@ -66,7 +66,7 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: "incorrect password" })
         }
-        
+
         I
         const token = await genToken(user._id)
         res.cookie("token", token, {
@@ -80,5 +80,20 @@ export const login = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({ message: `login error ${error}` })
+    }
+}
+
+
+export const logOut = async (req, res) => {
+    try {
+        res.clearCookie("token")
+        return res.status(200).json({
+            message: "log out successfully"
+        })
+    }
+    catch (error) {
+        return res.status(500).json({
+            message: `logout error ${error}`
+        })
     }
 }

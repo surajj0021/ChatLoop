@@ -13,7 +13,7 @@ app.get('/',(req,res)=>{
 
 app.listen(port,()=>{
     connectDb()
-    console.log("🟢  server Started")
+    console.log("🟢🟢🟢🟢  server Started 🟢🟢🟢🟢")
 })
 
 

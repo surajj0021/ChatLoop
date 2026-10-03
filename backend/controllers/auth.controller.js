@@ -1,3 +1,6 @@
+import genToken from "../config/token.js"
+
+
 import User from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 
@@ -11,7 +14,7 @@ export const signUp = async (req, res) => {
             })
         }
 
-        const checkUserByEmail = await User.findone({ email })
+        const checkUserByEmail = await User.findOne({ email })
         if (checkUserByEmail) {
             return res.status(400).json({
                 message: "email already exist"
@@ -22,19 +25,22 @@ export const signUp = async (req, res) => {
             return res.status(400).json({ message: "password must be at least 6 characters" })
         }
 
-        const hashedPassword = await bcrypt.hashed(passsword, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
             userName, email, password: hashedPassword
         })
-        I
+
         const token = await genToken(user._id)
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            sameSite: "None",
+            sameSite: "lax",
             secure: false
         })
+
+        const safeUser = user.toObject()
+        delete safeUser.password
 
         return res.status(201).json(user)
 
@@ -55,7 +61,7 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body
 
-        const user = await User.findone({ email })
+        const user = await User.findOne({ email })
         if (!user) {
             return res.status(400).json({
                 message: "user does not exist"
@@ -67,14 +73,17 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "incorrect password" })
         }
 
-        I
+
         const token = await genToken(user._id)
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            sameSite: "None",
+            sameSite: "lax",
             secure: false
         })
+
+        const safeUser = user.toObject()
+        delete safeUser.password
 
         return res.status(200).json(user)
 

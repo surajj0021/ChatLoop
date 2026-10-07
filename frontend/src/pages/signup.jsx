@@ -1,12 +1,13 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-
+import axios from "axios"
+import serverUrl from "../config/server.js"
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
   let navigate = useNavigate();
 
-  let [userName, setUserName] = useState("")
+  let [userName, setuserName] = useState("")
   let [email, setEmail] = useState("")
   let [password, setPassword] = useState("")
 
@@ -14,10 +15,10 @@ function SignUp() {
     e.preventDefault();
     try {
       let result = await axios.post(`${serverUrl}/api/auth/signup`, {
-        username,
+        userName,
         email,
         password
-      },{withCredentials:true})
+      }, { withCredentials: true })
       console.log(result);
     } catch (error) {
       console.log(error)
@@ -102,21 +103,21 @@ function SignUp() {
 
 
           {/* Form */}
-          <form className="flex flex-col gap-5" onSubmit={{handleSignUp}}>
+          <form className="flex flex-col gap-5" onSubmit={handleSignUp}>
 
-            {/* Username */}
+            {/* userName */}
             <div>
 
               <label className="text-sm font-medium text-gray-700">
-                Username
+                userName
               </label>
 
               <input
                 type="text"
-                placeholder="Enter your username"
+                placeholder="Enter your userName"
                 className="w-full h-12 mt-2 px-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#20c7ff]"
                 value={userName}
-                onChange={(e) => setUserName(e.target.value)}
+                onChange={(e) => setuserName(e.target.value)}
               />
 
             </div>

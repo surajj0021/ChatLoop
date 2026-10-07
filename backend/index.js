@@ -3,6 +3,8 @@ import dotenv from "dotenv"
 import connectDb from "./config/db.js"
 import authRouter from "./routes/auth.routes.js"
 import cookieParser from "cookie-parser"
+import cors from "cors"
+
 dotenv.config()
 
 const port = process.env.PORT || 5000

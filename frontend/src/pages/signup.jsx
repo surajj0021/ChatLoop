@@ -11,8 +11,11 @@ function SignUp() {
   let [email, setEmail] = useState("")
   let [password, setPassword] = useState("")
 
+  let [loading, setLoading]=useState(false)
+
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setLoading(true)
     try {
       let result = await axios.post(`${serverUrl}/api/auth/signup`, {
         userName,
@@ -20,8 +23,12 @@ function SignUp() {
         password
       }, { withCredentials: true })
       console.log(result);
+      setEmail("");
+      setPassword("");
+      setLoading(false)
     } catch (error) {
       console.log(error)
+      setLoading(false)
     }
   }
 
@@ -189,7 +196,7 @@ function SignUp() {
               type="submit"
               className="w-full h-12 bg-[#20c7ff] text-white font-semibold rounded-lg hover:bg-[#0bb5e8] transition"
             >
-              Create Account
+              {loading?"Loading...":"Create Account"}
             </button>
 
           </form>

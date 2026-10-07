@@ -1,10 +1,37 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import serverUrl from '../config/server'
 
 function Login() {
 
   // State for showing/hiding password
   const [showPassword, setShowPassword] = useState(false)
+
+  let [email, setEmail] = useState("")
+  let [password, setPassword] = useState("")
+
+  let [loading, setLoading] = useState(false)
+
+
+  const handlelogin = async (e) => {
+    e.preventDefault();
+    setLoading(true)
+    try {
+      let result = await axios.post(`${serverUrl}/api/auth/login`, {
+        email,
+        password
+      }, { withCredentials: true })
+      console.log(result);
+      setEmail("");
+      setPassword("");
+      setLoading(false)
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+
+    }
+  }
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-5">
@@ -84,7 +111,7 @@ function Login() {
 
 
           {/* Login Form */}
-          <form className="flex flex-col gap-5">
+          <form className="flex flex-col gap-5" onSubmit={handlelogin} >
 
             {/* Email */}
             <div>
@@ -97,6 +124,7 @@ function Login() {
                 type="email"
                 placeholder="you@example.com"
                 className="w-full h-12 mt-2 px-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#20c7ff]"
+                onChange={(e) => setEmail(e.target.value)} value={email}
               />
 
             </div>
@@ -125,6 +153,7 @@ function Login() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   className="w-full h-12 mt-2 px-4 pr-16 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#20c7ff]"
+                  onChange={(e) => setPassword(e.target.value)} value={password}
                 />
 
                 {/* Show / Hide */}
@@ -161,7 +190,7 @@ function Login() {
               type="submit"
               className="w-full h-12 bg-[#20c7ff] text-white font-semibold rounded-lg hover:bg-[#0bb5e8] transition"
             >
-              Login
+              {loading ? "Loading..." : "Create Account"}
             </button>
 
           </form>
@@ -188,3 +217,5 @@ function Login() {
 }
 
 export default Login
+
+

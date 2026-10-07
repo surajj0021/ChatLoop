@@ -13,10 +13,12 @@ function Login() {
 
   let [loading, setLoading] = useState(false)
 
+  let [err, setErr] = useState("")
 
   const handlelogin = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
+    setErr(""); // Clear previous error
     try {
       let result = await axios.post(`${serverUrl}/api/auth/login`, {
         email,
@@ -29,6 +31,7 @@ function Login() {
     } catch (error) {
       console.log(error)
       setLoading(false)
+      setErr(error.response.data.message)
 
     }
   }
@@ -167,6 +170,16 @@ function Login() {
 
               </div>
 
+              {/* error message */}
+              {err && (
+                <div className="flex items-center gap-2 mt-3 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
+                  <span className="text-red-500">⚠</span>
+                  <p className="text-sm text-red-600">
+                    {err}
+                  </p>
+                </div>
+              )}
+
             </div>
 
 
@@ -190,7 +203,7 @@ function Login() {
               type="submit"
               className="w-full h-12 bg-[#20c7ff] text-white font-semibold rounded-lg hover:bg-[#0bb5e8] transition"
             >
-              {loading ? "Loading..." : "Create Account"}
+              {loading ? "Loading..." : "Login"}
             </button>
 
           </form>

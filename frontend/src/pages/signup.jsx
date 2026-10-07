@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import axios from "axios"
 import serverUrl from "../config/server.js"
+
+
+
+
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
   let navigate = useNavigate();
@@ -11,10 +15,16 @@ function SignUp() {
   let [email, setEmail] = useState("")
   let [password, setPassword] = useState("")
 
-  let [loading, setLoading]=useState(false)
+  let [loading, setLoading] = useState(false)
+
+  let [err, setErr] = useState("")
+
 
   const handleSignUp = async (e) => {
+
     e.preventDefault();
+    setErr(""); // Clear previous error
+
     setLoading(true)
     try {
       let result = await axios.post(`${serverUrl}/api/auth/signup`, {
@@ -173,7 +183,18 @@ function SignUp() {
                 </button>
 
               </div>
+
             </div>
+
+            {/* error message */}
+            {err && (
+              <div className="flex items-center gap-2 mt-3 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
+                <span className="text-red-500">⚠</span>
+                <p className="text-sm text-red-600">
+                  {err}
+                </p>
+              </div>
+            )}
 
 
             {/* Terms */}
@@ -196,7 +217,7 @@ function SignUp() {
               type="submit"
               className="w-full h-12 bg-[#20c7ff] text-white font-semibold rounded-lg hover:bg-[#0bb5e8] transition"
             >
-              {loading?"Loading...":"Create Account"}
+              {loading ? "Loading..." : "Create Account"}
             </button>
 
           </form>

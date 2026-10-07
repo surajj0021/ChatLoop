@@ -1,46 +1,79 @@
-import axios from 'axios'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import serverUrl from '../config/server'
+import axios from "axios"
+import React, { useState } from "react"
+import { Link } from "react-router-dom"
+import serverUrl from "../config/server"
 
 function Login() {
 
   // State for showing/hiding password
   const [showPassword, setShowPassword] = useState(false)
 
-  let [email, setEmail] = useState("")
-  let [password, setPassword] = useState("")
+  // Form states
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-  let [loading, setLoading] = useState(false)
+  // Loading state
+  const [loading, setLoading] = useState(false)
 
-  let [err, setErr] = useState("")
+  // Error message state
+  const [err, setErr] = useState("")
+
 
   const handlelogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setErr(""); // Clear previous error
+
+    // Prevent page refresh when form is submitted
+    e.preventDefault()
+
+    // Clear previous error
+    setErr("")
+
+    // Start loading
+    setLoading(true)
+
     try {
-      let result = await axios.post(`${serverUrl}/api/auth/login`, {
-        email,
-        password
-      }, { withCredentials: true })
-      console.log(result);
-      setEmail("");
-      setPassword("");
-      setLoading(false)
+
+      const result = await axios.post(
+        `${serverUrl}/api/auth/login`,
+        {
+          email,
+          password
+        },
+        {
+          withCredentials: true
+        }
+      )
+
+      console.log(result)
+
+      // Clear form after successful login
+      setEmail("")
+      setPassword("")
+
     } catch (error) {
+
       console.log(error)
+
+      // Show backend error message
+      setErr(
+        error.response?.data?.message ||
+        "Something went wrong. Please try again."
+      )
+
+    } finally {
+
+      // Stop loading whether request succeeds or fails
       setLoading(false)
-      setErr(error.response.data.message)
 
     }
   }
+
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-5">
 
       {/* Main Card */}
       <div className="w-full max-w-[950px] bg-white rounded-2xl shadow-xl overflow-hidden flex">
+
 
         {/* ================= LEFT SIDE ================= */}
         <div className="hidden md:flex w-[45%] bg-[#071827] p-10 flex-col justify-between">
@@ -114,7 +147,10 @@ function Login() {
 
 
           {/* Login Form */}
-          <form className="flex flex-col gap-5" onSubmit={handlelogin} >
+          <form
+            className="flex flex-col gap-5"
+            onSubmit={handlelogin}
+          >
 
             {/* Email */}
             <div>
@@ -127,7 +163,8 @@ function Login() {
                 type="email"
                 placeholder="you@example.com"
                 className="w-full h-12 mt-2 px-4 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#20c7ff]"
-                onChange={(e) => setEmail(e.target.value)} value={email}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
 
             </div>
@@ -156,7 +193,8 @@ function Login() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   className="w-full h-12 mt-2 px-4 pr-16 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#20c7ff]"
-                  onChange={(e) => setPassword(e.target.value)} value={password}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
 
                 {/* Show / Hide */}
@@ -170,13 +208,19 @@ function Login() {
 
               </div>
 
-              {/* error message */}
+
+              {/* Error Message */}
               {err && (
                 <div className="flex items-center gap-2 mt-3 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
-                  <span className="text-red-500">⚠</span>
+
+                  <span className="text-red-500">
+                    ⚠
+                  </span>
+
                   <p className="text-sm text-red-600">
                     {err}
                   </p>
+
                 </div>
               )}
 
@@ -201,7 +245,8 @@ function Login() {
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full h-12 bg-[#20c7ff] text-white font-semibold rounded-lg hover:bg-[#0bb5e8] transition"
+              disabled={loading}
+              className="w-full h-12 bg-[#20c7ff] text-white font-semibold rounded-lg hover:bg-[#0bb5e8] transition disabled:opacity-60"
             >
               {loading ? "Loading..." : "Login"}
             </button>
@@ -211,6 +256,7 @@ function Login() {
 
           {/* Create Account Link */}
           <p className="text-center text-gray-500 mt-7">
+
             Don't have an account?
 
             <Link
@@ -219,6 +265,7 @@ function Login() {
             >
               Create account
             </Link>
+
           </p>
 
         </div>
@@ -230,5 +277,3 @@ function Login() {
 }
 
 export default Login
-
-
